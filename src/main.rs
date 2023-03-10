@@ -11,9 +11,6 @@ use winit_input_helper::WinitInputHelper;
 
 pub const WIDTH: u32 = 320;
 pub const HEIGHT: u32 = 240;
-// const DEFAULT_SATURATION: u8 = 192;
-
-
 
 pub mod world;
 
@@ -54,7 +51,6 @@ fn main() -> Result<(), Error> {
             world.update();
         }
 
-        world.draw(pixels.get_frame_mut());
 
         if let Event::RedrawRequested(_) = event {            
             if let Err(err) = pixels.render() {
@@ -64,7 +60,6 @@ fn main() -> Result<(), Error> {
             }
         }
 
-        // Handle input events
         if input.update(&event) {
             // Close events
             if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
@@ -88,8 +83,7 @@ fn main() -> Result<(), Error> {
                     game_speed -= 1;
                 }
             }
-
-
+            
             // World generation
             if input.key_pressed(VirtualKeyCode::R){
                 world.generate_world(false);
@@ -103,10 +97,6 @@ fn main() -> Result<(), Error> {
                 world.change_cell(input.mouse());
             }
 
-
-            
-
-
             // Resize the window
             if let Some(size) = input.window_resized() {
                 if let Err(err) = pixels.resize_surface(size.width, size.height) {
@@ -115,10 +105,10 @@ fn main() -> Result<(), Error> {
                     return;
                 }
             }
-            // Update internal state and request a redraw
-            window.request_redraw();
-
         }
+        // Update internal state and request a redraw
+        world.draw(pixels.get_frame_mut());
+        window.request_redraw();
 
     });
 }
